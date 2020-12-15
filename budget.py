@@ -1,6 +1,23 @@
 from copy import deepcopy
 
 
+def make_title(title):
+    asterisks = '*' * ((30 - len(title)) // 2)
+    return f'{asterisks}{title}{asterisks}'
+
+
+def float_to_amount(num):
+    amount = str(num).split(".")
+    if len(amount) == 1:
+        amount.append('')
+
+    return f'{amount[0]}.{amount[1].rjust(2, "0")}'
+
+
+def justify(description, amount):
+    return f'{description[:23].ljust(23, " ")}{float_to_amount(amount)[:7].rjust(7, " ")}'
+
+
 class Category:
     def __init__(self, category):
         self.category = category
@@ -19,8 +36,7 @@ class Category:
         Returns: [type]: [description]
         """
         self.ballance += amount
-        self.ledger.append({"amount":
-                            amount, "description": description})
+        self.ledger.append({"amount": amount, "description": description})
         return self
 
     def withdraw(self, amount, description=""):
@@ -91,7 +107,14 @@ class Category:
         Transfer to Clothing    -50.00
         Total: 923.96
         """
-        return str(self.__class__)
+        lines = []
+        lines.append(make_title(self.category))
+        for item in self.ledger:
+            # these are by order, not by name like in js destructuring!
+            amount, description = item.values()
+            lines.append(justify(description, amount))
+        lines.append(f"Total: {self.ballance}")
+        return "\n".join(lines)
 
 
 def create_spend_chart(iterable):
@@ -109,25 +132,25 @@ def create_spend_chart(iterable):
     "Percentage spent by category".
 
     Percentage spent by category
-    100|          
-    90|          
-    80|          
-    70|          
-    60| o        
-    50| o        
-    40| o        
-    30| o        
-    20| o  o     
-    10| o  o  o  
-      0| o  o  o  
+    100|
+    90|
+    80|
+    70|
+    60| o
+    50| o
+    40| o
+    30| o
+    20| o  o
+    10| o  o  o
+      0| o  o  o
         ----------
-        F  C  A  
-        o  l  u  
-        o  o  t  
-        d  t  o  
-            h     
-            i     
-            n     
-            g     
+        F  C  A
+        o  l  u
+        o  o  t
+        d  t  o
+            h
+            i
+            n
+            g
         """
     pass
